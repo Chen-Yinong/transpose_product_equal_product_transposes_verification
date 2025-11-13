@@ -51,5 +51,73 @@ void mat_print(const Matrix* A,const char *name)
         }
         printf("\n");
     }
-    
+}
+
+Matrix mat_transpose(const Matrix* A)
+{
+    Matrix AT=mat_create(A->cols,A->rows);
+    for (size_t i = 0; i < A->rows; i++)
+    {
+        for (size_t j = 0; j < A->cols; j++)
+        {
+            mat_set(&AT,j,i,mat_get(A,i,j));
+        }
+    }
+    return AT;
+}
+
+Matrix mat_mul(const Matrix* A,const Matrix* B)
+{
+    Matrix product=mat_create(A->rows,B->cols);
+    double sum=0;
+    for (size_t i = 0; i < product.rows; i++)
+    {
+        for (size_t j = 0; j < product.cols; j++)
+        {
+            sum=0;
+            for (size_t k = 0; k < A->cols; k++)
+            {
+                sum+=mat_get(A,i,k)*mat_get(B,k,j);
+            }
+            mat_set(&product,i,j,sum);
+        }
+    }
+    return product;
+}
+
+int mat_equal(const Matrix* A,const Matrix* B)
+{
+    if (A->rows != B->rows || A->cols != B->cols)
+    {
+        return 0;
+    }
+    for (size_t i = 0; i < A->rows; i++)
+    {
+        for (size_t j = 0; j < A->cols; j++)
+        {
+            if (mat_get(A,i,j)-mat_get(B,i,j) > 1e-9)
+            {
+                return 0;
+            }
+            
+        }
+    }
+    return 1;
+}//0表示不相等，1表示相等
+
+int mat_verification(const Matrix* A,const Matrix* B)
+{
+    Matrix AB=mat_mul(A,B);
+    Matrix ABT=mat_transpose(&AB);
+    mat_print(&AB,"AB");
+    Matrix AT=mat_transpose(A),BT=mat_transpose(B);
+    Matrix BTAT=mat_mul(&BT,&AT);
+    mat_print(&BTAT,"BTAT");
+    int r=mat_equal(&ABT,&BTAT);
+    mat_free(&AB);
+    mat_free(&ABT);
+    mat_free(&AT);
+    mat_free(&BT);
+    mat_free(&BTAT);
+    return r;
 }
