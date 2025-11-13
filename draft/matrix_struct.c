@@ -160,24 +160,27 @@ int main(void)
         
     }
     
-    mat_print(&my_1st_mat,"my_1st_mat");
+    //mat_print(&my_1st_mat,"my_1st_mat");
 
     Matrix my_2nd_mat=mat_create(C,R);
     mat_check(&my_2nd_mat);
-    srand((unsigned)time(NULL));
-    for (size_t i = 0; i < R; i++)
+    
+    for (size_t i = 0; i < C; i++)
     {
-        for (size_t j = 0; j < C; j++)
+        for (size_t j = 0; j < R; j++)
         {
             mat_set(&my_2nd_mat,i,j,rand()%10);
         }
         
     }
     printf("%d",mat_verification(&my_1st_mat,&my_2nd_mat));
+    mat_free(&my_1st_mat);
+    mat_free(&my_2nd_mat); 
+
     //mat_print(&my_2nd_mat,"my_2nd_mat");
     //Matrix m=mat_mul(&my_1st_mat,&my_2nd_mat);
     //mat_print(&m,"Product");
-    //缺free
+    
     return 0;
 
 
